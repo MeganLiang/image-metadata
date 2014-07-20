@@ -69,6 +69,7 @@ class GUI:
         #this variable stores whether the data has been validated or not
         self.ready_to_write = False
         self.recordlist = []
+
         self.licence_init = ""
 
         #creating label and field variables in GUI
@@ -137,32 +138,27 @@ class GUI:
                 print('Please enter numeric data for image ID')
 
     def writetocsv(self):
-        #this is the callback method for the 'write to csv' button
-        import csv
-        file_name = 'database.txt'
-        imageID_list = []
+            #this is the callback method for the 'write to csv' button
+            import csv
+            file_name = 'database.txt'
+            imageID_list= []
 
-        if self.ready_to_write: #cheacks data has been previously validated
-            ofile = open(file_name, 'a') #open with write('w') or append('a') privelages
-            writer = csv.writer(ofile, delimiter=',')
-            #cycles through list of records created by gui
-            for record in self.recordlist:
+            if self.ready_to_write: #cheacks data has been previously validated
+                ofile = open(file_name, 'a') #open with write('w') or append('a') privelages
+                writer = csv.writer(ofile, delimiter=',')
+                #cycles through list of records created by gui
 
-
-                if len (imageID_list) > len(set(imageID_list)):
-                    tkinter.messagebox.showwarning('Warning!','Please enter unique image ID')
-                    print (imageID_list)
-                else:
-                    writer.writerow([record.get_id(),record.get_file_and_ext(), record.get_title(), record.get_owner(), record.get_licence()])
+                for record in self.recordlist:
                     imageID_list.append(record.get_id())
                     print (imageID_list)
-            #explicitly closes the output file
-            ofile.close()
-        else:
-            tkinter.messagebox.showwarning('Error!', 'You need to Validate your data')
+                    writer.writerow([record.get_id(),record.get_file_and_ext(), record.get_title(), record.get_owner(), record.get_licence()])
+                #explicitly closes the output file
+                ofile.close()
+            else:
+                tkinter.messagebox.showwarning('Error!', 'You need to Validate your data')
 
-        self.ready_to_write= False
-        tkinter.messagebox.showinfo('Notice',file_name+' File Generated Successfully')
+            self.ready_to_write= False
+            tkinter.messagebox.showinfo('Notice',file_name+' File Generated Successfully')
 
 #initialises the programme
 GUI()
