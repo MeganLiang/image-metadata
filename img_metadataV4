@@ -52,9 +52,6 @@ class Image:
     def get_licence(self):
         return self.licence
 
-
-
-
 #create the GUI interface
 class GUI:
     #init should return None, only self
@@ -117,13 +114,24 @@ class GUI:
         window.mainloop()
 
     def doSubmit(self):
+       #test uniqueness of each school name entered u
+       noduplicate = True;
+       for record in self.recordlist:
+           if self.image_id_field.get() == record.get_id():
+               noduplicate= False
+               tkinter.messagebox.showwarning('Warning!','Duplicate image ID');
+               print('Please enter image ID again');
 
-        if len(self.image_id_field.get()) <1 or len(self.file_ext_field.get()) <1 or len(self.title_field.get()) <1 or len(self.owner_field.get()) <1 or self.licence.get() == "Select licence type":
+
+       if noduplicate == True:
+        if len(self.image_id_field.get()) <1 or len(self.file_ext_field.get()) <1 or len(self.title_field.get()) <1 or len(self.owner_field.get()) <1 or self.licence.get() == (self.licence_init):
             tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
         else:
             try:
                 validated_integer = int(self.image_id_field.get())
                 self.recordlist.append(Image(self.image_id_field.get(), self.file_ext_field.get(), self.title_field.get(), self.owner_field.get(), self.licence.get()))
+
+
                 self.ready_to_write= True
                 tkinter.messagebox.showinfo('Notice','Submission Successful')
 
@@ -137,11 +145,12 @@ class GUI:
                 tkinter.messagebox.showwarning('Warning!','Please enter numeric data for image ID')
                 print('Please enter numeric data for image ID')
 
+
+
     def writetocsv(self):
             #this is the callback method for the 'write to csv' button
             import csv
             file_name = 'database.txt'
-            imageID_list= []
 
             if self.ready_to_write: #cheacks data has been previously validated
                 ofile = open(file_name, 'a') #open with write('w') or append('a') privelages
@@ -149,8 +158,6 @@ class GUI:
                 #cycles through list of records created by gui
 
                 for record in self.recordlist:
-                    imageID_list.append(record.get_id())
-                    print (imageID_list)
                     writer.writerow([record.get_id(),record.get_file_and_ext(), record.get_title(), record.get_owner(), record.get_licence()])
                 #explicitly closes the output file
                 ofile.close()
